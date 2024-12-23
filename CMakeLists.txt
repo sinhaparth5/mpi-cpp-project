@@ -19,15 +19,22 @@ FetchContent_MakeAvailable(json)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Master node executable
-add_executable(master_node master_node.cpp)
+add_executable(master_node master_node.cpp common.h)
 target_link_libraries(master_node PRIVATE 
     pthread
     nlohmann_json::nlohmann_json
+    MPI::MPI_CXX
 )
 
 # Worker node executable
-add_executable(worker_node worker_node.cpp)
+add_executable(worker_node worker_node.cpp common.h)
 target_link_libraries(worker_node PRIVATE 
-    MPI::MPI_CXX
+    pthread
     nlohmann_json::nlohmann_json
+    MPI::MPI_CXX
 )
+
+# Optional: Display build info
+message(STATUS "Building Distributed Graph Processing System")
+message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
+message(STATUS "MPI Found: ${MPI_FOUND}")

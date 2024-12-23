@@ -6,16 +6,18 @@
 #include <vector>
 #include <limits>
 
+// Constants
 const uint32_t MAGIC_NUMBER = 0x12345678;
 const int PORT = 12345;
 const size_t MAX_MESSAGE_SIZE = 1024 * 1024;
 
+// Message structure
 struct Message {
     uint32_t magic;
     uint32_t size;
 } __attribute__((packed));
 
-// Debug utility functions
+// Utility functions
 inline void printHex(const void* data, size_t size) {
     const unsigned char* p = static_cast<const unsigned char*>(data);
     for (size_t i = 0; i < size; i++) {
