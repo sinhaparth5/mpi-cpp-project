@@ -1,0 +1,46 @@
+services:
+  master:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "12345:12345"  # Changed from 5000
+    command: ./build/master_node
+    networks:
+      graph_network:
+        aliases:
+          - master
+
+  worker1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - master
+    command: mpiexec -n 4 ./build/worker_node 1
+    environment:
+      - HYDRA_LAUNCHER=fork
+    networks:
+      - graph_network
+    deploy:
+      restart_policy:
+        condition: none
+
+  worker2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - master
+    command: mpiexec -n 4 ./build/worker_node 2
+    environment:
+      - HYDRA_LAUNCHER=fork
+    networks:
+      - graph_network
+    deploy:
+      restart_policy:
+        condition: none
+
+networks:
+  graph_network:
+    driver: bridge
